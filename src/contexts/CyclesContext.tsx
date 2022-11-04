@@ -1,13 +1,5 @@
 import { createContext, ReactNode, useMemo, useReducer, useState } from 'react'
-
-interface Cycle {
-  id: string
-  task: string
-  minutesAmount: number
-  startDate: Date
-  interruptedDate?: Date
-  finishedDate?: Date
-}
+import { ActionTypes, Cycle, cyclesReducer } from '../reducers/cycles'
 
 interface CreateCycleData {
   task: string
@@ -29,11 +21,6 @@ export const CycleContext = createContext({} as CyclesContextType)
 
 interface CycleProviderProps {
   children: ReactNode
-}
-
-interface CyclesState {
-  cycles: Cycle[]
-  activeCycleId: string | null
 }
 
 /**
@@ -61,51 +48,10 @@ export function CycleProvider(props: CycleProviderProps) {
    * infos e quando dispararmos a action 'ADD_NEW_CYCLE', atualizamos a lista de ciclos e o activeCycleId ao mesmo tempo
    * sem precisarmos chamar 2 funçoes diferentes
    */
-  const [cyclesState, dispatch] = useReducer(
-    (state: CyclesState, action: any) => {
-      // Essa função é executada quando o dispatch é chamado
-      // O valor passado no parametro do dispatch() vai estar disponível no 'action'
-
-      // console.log(state)
-      // console.log(action)
-
-      switch (action.type) {
-        case 'ADD_NEW_CYCLE':
-          return {
-            ...state,
-            cycles: [...state.cycles, action.payload.newCycle],
-            activeCycleId: action.payload.newCycle.id,
-          }
-
-        case 'INTERRUPT_CURRENT_CYCLE':
-          return {
-            ...state,
-            cycles: state.cycles.map((cycle) => {
-              if (cycle.id === state.activeCycleId)
-                return { ...cycle, interruptedDate: new Date() }
-
-              return cycle
-            }),
-            activeCycleId: null,
-          }
-
-        case 'MARK_CURRENT_CYCLE_AS_FINISHED':
-          return {
-            ...state,
-            cycles: state.cycles.map((cycle) => {
-              if (cycle.id === state.activeCycleId)
-                return { ...cycle, finishedDate: new Date() }
-
-              return cycle
-            }),
-          }
-
-        default:
-          return state
-      }
-    },
-    { cycles: [], activeCycleId: null }
-  )
+  const [cyclesState, dispatch] = useReducer(cyclesReducer, {
+    cycles: [],
+    activeCycleId: null,
+  })
 
   /**
    * Também da para desestruturar acima direto do array
@@ -124,12 +70,12 @@ export function CycleProvider(props: CycleProviderProps) {
    */
   const activeCycle = useMemo(
     () => cycles.find((cycle) => cycle.id === activeCycleId),
-    [cycles, activeCycleId]
+    [cycles, activeCycleId],
   )
 
   function markCurrentCycleAsFinished() {
     dispatch({
-      type: 'MARK_CURRENT_CYCLE_AS_FINISHED',
+      type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED,
       payload: {
         activeCycleId,
       },
@@ -165,7 +111,7 @@ export function CycleProvider(props: CycleProviderProps) {
      * Normalmente, é utilizado o padrao {type: '', payload: {}}
      */
     dispatch({
-      type: 'ADD_NEW_CYCLE',
+      type: ActionTypes.ADD_NEW_CYCLE,
       payload: {
         newCycle,
       },
@@ -179,7 +125,7 @@ export function CycleProvider(props: CycleProviderProps) {
 
   function interruptCurrentCycle() {
     dispatch({
-      type: 'INTERRUPT_CURRENT_CYCLE',
+      type: ActionTypes.INTERRUPT_CURRENT_CYCLE,
       payload: {
         activeCycleId,
       },
