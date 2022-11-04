@@ -1,3 +1,5 @@
+import { ActionTypes } from './actions'
+
 export interface Cycle {
   id: string
   task: string
@@ -10,16 +12,6 @@ export interface Cycle {
 interface CyclesState {
   cycles: Cycle[]
   activeCycleId: string | null
-}
-
-/**
- * Por padrao, os valores do enum ficam como numeros, 0, 1, 2...
- * por isso definimos um valor para cada chave
- */
-export enum ActionTypes {
-  ADD_NEW_CYCLE = 'ADD_NEW_CYCLE',
-  INTERRUPT_CURRENT_CYCLE = 'INTERRUPT_CURRENT_CYCLE',
-  MARK_CURRENT_CYCLE_AS_FINISHED = 'MARK_CURRENT_CYCLE_AS_FINISHED',
 }
 
 export function cyclesReducer(state: CyclesState, action: any) {

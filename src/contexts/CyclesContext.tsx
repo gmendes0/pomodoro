@@ -1,5 +1,11 @@
 import { createContext, ReactNode, useMemo, useReducer, useState } from 'react'
-import { ActionTypes, Cycle, cyclesReducer } from '../reducers/cycles'
+import {
+  ActionTypes,
+  addNewCycleAction,
+  interruptCurrentCycleAction,
+  markCurrentCycleAsFinishedAction,
+} from '../reducers/cycles/actions'
+import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
 
 interface CreateCycleData {
   task: string
@@ -74,12 +80,7 @@ export function CycleProvider(props: CycleProviderProps) {
   )
 
   function markCurrentCycleAsFinished() {
-    dispatch({
-      type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED,
-      payload: {
-        activeCycleId,
-      },
-    })
+    dispatch(markCurrentCycleAsFinishedAction())
 
     // setCycles((state) =>
     //   state.map((cycle) => {
@@ -110,12 +111,7 @@ export function CycleProvider(props: CycleProviderProps) {
      *
      * Normalmente, é utilizado o padrao {type: '', payload: {}}
      */
-    dispatch({
-      type: ActionTypes.ADD_NEW_CYCLE,
-      payload: {
-        newCycle,
-      },
-    })
+    dispatch(addNewCycleAction(newCycle))
 
     // setCycles((state) => [...state, newCycle])
     // setActiveCycleId(newCycle.id)
@@ -124,12 +120,7 @@ export function CycleProvider(props: CycleProviderProps) {
   }
 
   function interruptCurrentCycle() {
-    dispatch({
-      type: ActionTypes.INTERRUPT_CURRENT_CYCLE,
-      payload: {
-        activeCycleId,
-      },
-    })
+    dispatch(interruptCurrentCycleAction())
 
     // setCycles((state) =>
     //   state.map((cycle) => {
