@@ -14,7 +14,7 @@ interface CyclesState {
   activeCycleId: string | null
 }
 
-export function cyclesReducer(state: CyclesState, action: any) {
+export function cyclesReducer(state: CyclesState, action: any): CyclesState {
   // Essa função é executada quando o dispatch é chamado
   // O valor passado no parametro do dispatch() vai estar disponível no 'action'
 
@@ -50,6 +50,7 @@ export function cyclesReducer(state: CyclesState, action: any) {
 
           return cycle
         }),
+        activeCycleId: null,
       }
 
     default:

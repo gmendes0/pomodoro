@@ -1,11 +1,5 @@
 {
-  "extends": [
-    "@rocketseat/eslint-config/react",
-    "plugin:prettier/recommended",
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "extends": ["@rocketseat/eslint-config/react", "plugin:prettier/recommended"],
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error"
